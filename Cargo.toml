@@ -1,0 +1,25 @@
+[package]
+name = "tjan_mcsr"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = { version = "4", features = ["macros"], default-features = false }
+hyper = { version = "0.14", default-features = false, features = [
+    "client",
+    "http1",
+] }
+hyper-tls = { version = "0.5.0", default-features = false }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0", default-features = false }
+tokio = { version = "1.26.0", default-features = false}
+actix-cors = "0.6.4"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,24 @@
+
+FROM rust:1.65 as build
+
+RUN USER=root cargo new --bin tjan_mcsr
+WORKDIR /tjan_mcsr
+
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+RUN cargo build
+RUN rm src/*.rs
+
+COPY ./src ./src
+
+RUN rm ./target/debug/deps/tjan_mcsr*
+RUN cargo build
+
+
+
+FROM rust:1.65-slim-buster
+
+COPY --from=build /tjan_mcsr/target/debug/tjan_mcsr .
+
+CMD ["./tjan_mcsr"]
