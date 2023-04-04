@@ -20,5 +20,6 @@ RUN cargo build --release
 FROM rust:1.65-slim-buster
 
 COPY --from=build /tjan_mcsr/target/release/tjan_mcsr .
+COPY config.json .
 
 CMD ["./tjan_mcsr"]
