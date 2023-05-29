@@ -18,9 +18,17 @@ pub async fn get_rank(user: &String) -> Result<String, GetRankError> {
     let parsed_response = serde_json::from_str::<McsrResponse>(&response_string)?;
     if let Some(data) = parsed_response.data {
         Ok(format!(
-            "MCSR Ranked Rang: #{} (Elo: {}) | W:{} / L:{} / D:{}",
-            data.elo_rank.unwrap_or(0),
-            data.elo_rate,
+            "MCSR Ranked Rang: {} (Elo: {}) | W:{} / L:{} / D:{}",
+            if data.elo_rank.is_some() {
+                format!("#{}", data.elo_rank.unwrap())
+            } else {
+                "Unranked".to_string()
+            },
+            if data.elo_rate == -1 {
+                "No Elo".to_string()
+            } else {
+                data.elo_rate.to_string()
+            },
             data.records.second.win,
             data.records.second.lose,
             data.records.second.draw,

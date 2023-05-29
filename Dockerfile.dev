@@ -1,5 +1,5 @@
 
-FROM rust:1.65 as build
+FROM rust:1.69 as build
 
 RUN USER=root cargo new --bin tjan_mcsr
 WORKDIR /tjan_mcsr
@@ -17,7 +17,7 @@ RUN cargo build
 
 
 
-FROM rust:1.65-slim-buster
+FROM rust:1.69-slim-buster
 
 COPY --from=build /tjan_mcsr/target/debug/tjan_mcsr .
 COPY config.json .

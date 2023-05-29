@@ -1,40 +1,26 @@
 pub mod env;
 mod errors;
 
+mod commands;
 mod model;
 mod repository;
-mod routes;
+mod twitch_repository;
 
-use actix_cors::Cors;
-use actix_web::{middleware, web::Data, App, HttpServer};
 use env::Env;
 
+use errors::run_error::RunError;
 use repository::get_config;
-use routes::command::command;
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    match Env::check_variables() {
-        Ok(env) => match get_config() {
-            Ok(config) => {
-                HttpServer::new(move || {
-                    App::new()
-                        .app_data(Data::new(config.clone()))
-                        .wrap(
-                            middleware::DefaultHeaders::new()
-                                .add(("Cache-Control", "no-cache, no-store, must-revalidate"))
-                                .add(("Pragma", "no-cache"))
-                                .add(("Expires", "0")),
-                        )
-                        .wrap(Cors::permissive())
-                        .service(command)
-                })
-                .bind(("0.0.0.0", env.port))?
-                .run()
-                .await
-            }
-            Err(e) => Ok(println!("{e}")),
-        },
-        Err(e) => Ok(println!("{e}")),
+use twitch_repository::join_channels;
+#[tokio::main]
+async fn main() {
+    if let Err(error) = run().await {
+        println!("{}", error);
     }
+}
+
+async fn run() -> Result<(), RunError> {
+    let env = Env::check_variables()?;
+    let config = get_config()?;
+    join_channels(env.bot_name, env.oauth_token, config).await?;
+    Ok(())
 }

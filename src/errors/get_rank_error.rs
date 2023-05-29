@@ -1,7 +1,6 @@
 use std::string::FromUtf8Error;
 
-use actix_web::{http::uri::InvalidUri, HttpResponse, ResponseError};
-use hyper::StatusCode;
+use hyper::http::uri::InvalidUri;
 #[derive(Debug)]
 pub enum GetRankError {
     InvalidUrl,
@@ -42,15 +41,5 @@ impl std::fmt::Display for GetRankError {
             GetRankError::Utf8Error => write!(f, "utf8 parse error"),
             GetRankError::ParseError => write!(f, "mcsr response parse error"),
         }
-    }
-}
-
-impl ResponseError for GetRankError {
-    fn error_response(&self) -> HttpResponse {
-        HttpResponse::InternalServerError().body(self.to_string())
-    }
-
-    fn status_code(&self) -> StatusCode {
-        StatusCode::INTERNAL_SERVER_ERROR
     }
 }

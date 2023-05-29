@@ -1,3 +1,9 @@
+pub mod elo_check_error;
 pub mod environment_variables_error;
 pub mod get_config_error;
 pub mod get_rank_error;
+pub mod join_channels_error;
+pub mod parse_command_error;
+pub mod ping_error;
+pub mod rank_error;
+pub mod run_error;

@@ -7,12 +7,6 @@ services:
     container_name: tjan-mcsr
     restart: unless-stopped
     environment:
-      - PORT
-    expose:
-      - $PORT
-    networks:
-      - main-network
-networks:
-  main-network:
-    name: main-network
-    external: true
+      - BOT_NAME
+      - OAUTH_TOKEN
+
